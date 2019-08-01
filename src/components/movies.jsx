@@ -18,6 +18,7 @@ class Movies extends Component {
     pageSize: 4,
     searchQuery: "",
     selectedGenre: null,
+    selectedCategory: "All Genres",
     sortColumn: { path: "title", order: "asc" }
   };
 
@@ -57,7 +58,12 @@ class Movies extends Component {
   };
 
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+    this.setState({
+      selectedCategory: genre.name,
+      selectedGenre: genre,
+      searchQuery: "",
+      currentPage: 1
+    });
   };
 
   handleSearch = query => {
@@ -94,15 +100,15 @@ class Movies extends Component {
   };
 
   render() {
-    const { length: count } = this.state.movies;
     const {
       currentPage,
       pageSize,
       sortColumn,
-      selectedGenre,
+      selectedCategory,
       genres,
       searchQuery
     } = this.state;
+
     const { user } = this.props;
 
     const { totalCount, data: movies } = this.getPageData();
@@ -113,7 +119,7 @@ class Movies extends Component {
           <ListGroup
             items={genres}
             onItemSelect={this.handleGenreSelect}
-            selectedItem={selectedGenre}
+            selectedItem={selectedCategory}
           />
         </div>
         <div className="col">
@@ -126,7 +132,10 @@ class Movies extends Component {
               New Movie
             </Link>
           )}
-          <p>Showing {totalCount} movies which available to rent.</p>
+          <p>
+            Showing {movies.length} of {totalCount} movies which are currently
+            available to rent.
+          </p>
 
           <SearchBox value={searchQuery} onChange={this.handleSearch} />
 
